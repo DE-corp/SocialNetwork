@@ -2,6 +2,7 @@
 using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 
 namespace SocialNetwork.DAL.Repositories
@@ -37,7 +38,19 @@ namespace SocialNetwork.DAL.Repositories
 
         private IDbConnection CreateConnection()
         {
-            return new SqliteConnection("Data Source = DB/social_network_bd.db; Version = 3");
+            string dbPath = GetSolutionRoot() + @"\SocialNetwork.DAL\DB\social_network_bd.db";
+            return new SqliteConnection($"Data Source = {dbPath}");
+        }
+
+        /// <summary>
+        /// Получаем путь до каталога с .sln файлом
+        /// </summary> 
+        public static string GetSolutionRoot()
+        {
+            var dir = Path.GetDirectoryName(Directory.GetCurrentDirectory());
+            var fullname = Directory.GetParent(dir).FullName;
+            var projectRoot = fullname.Substring(0, fullname.Length - 4);
+            return Directory.GetParent(projectRoot)?.FullName;
         }
     }
 }
