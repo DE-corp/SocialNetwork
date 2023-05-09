@@ -1,4 +1,5 @@
-﻿using SocialNetwork.BLL.Models;
+﻿using SocialNetwork.BLL.Exceptions;
+using SocialNetwork.BLL.Models;
 using SocialNetwork.DAL.Entities;
 using SocialNetwork.DAL.Repositories;
 using System;
@@ -8,10 +9,10 @@ namespace SocialNetwork.BLL.Services
 {
     public class UserService
     {
-        private IUserRepository userRepositiry;
+        private IUserRepository userRepository;
         public UserService()
         {
-            userRepositiry = new UserRepository();
+            userRepository = new UserRepository();
         }
 
         public void Register(UserRegistrationData userRegistrationData)
@@ -34,7 +35,7 @@ namespace SocialNetwork.BLL.Services
             if (!new EmailAddressAttribute().IsValid(userRegistrationData.Email))
                 throw new ArgumentNullException();
 
-            if (userRepositiry.FindByEmail(userRegistrationData.Email) != null)
+            if (userRepository.FindByEmail(userRegistrationData.Email) != null)
                 throw new ArgumentNullException();
 
             // Так как репозиторий работает с сущностью UserEntity, создаем ее и присваиваем значения
@@ -47,8 +48,57 @@ namespace SocialNetwork.BLL.Services
             };
 
             // Добавляем пользователя в БД, если возвращает 0, значит что то пошло не так
-            if (this.userRepositiry.Create(userEntity) == 0)
+            if (this.userRepository.Create(userEntity) == 0)
                 throw new Exception();
+        }
+
+        public User Authenticate(UserAuthenticationData userAuthenticationData)
+        {
+            var findUserEntity = userRepository.FindByEmail(userAuthenticationData.Email);
+            if (findUserEntity is null) throw new UserNotFoundException();
+
+            if (findUserEntity.password != userAuthenticationData.Password)
+                throw new WrongPasswordException();
+
+            return ConstructUserModel(findUserEntity);
+        }
+
+        public User FindByEmail(string email)
+        {
+            var findUserEntity = userRepository.FindByEmail(email);
+            if (findUserEntity is null) throw new UserNotFoundException();
+
+            return ConstructUserModel(findUserEntity);
+        }
+
+        public void Update(User user)
+        {
+            var updatableUserEntity = new UserEntity()
+            {
+                id = user.Id,
+                firstname = user.FirstName,
+                lastname = user.LastName,
+                password = user.Password,
+                email = user.Email,
+                photo = user.Photo,
+                favorite_movie = user.FavoriteMovie,
+                favorite_book = user.FavoriteBook
+            };
+
+            if (this.userRepository.Update(updatableUserEntity) == 0)
+                throw new Exception();
+        }
+
+        private User ConstructUserModel(UserEntity userEntity)
+        {
+            return new User(userEntity.id,
+                          userEntity.firstname,
+                          userEntity.lastname,
+                          userEntity.password,
+                          userEntity.email,
+                          userEntity.photo,
+                          userEntity.favorite_movie,
+                          userEntity.favorite_book);
         }
     }
 }
