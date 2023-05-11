@@ -18,17 +18,17 @@ namespace SocialNetwork.PLL.Views
         {
             var authenticationData = new UserAuthenticationData();
 
-            Console.WriteLine("Введите почтовый адрес:");
+            Console.Write("Введите почтовый адрес: ");
             authenticationData.Email = Console.ReadLine();
 
-            Console.WriteLine("Введите пароль:");
+            Console.Write("Введите пароль: ");
             authenticationData.Password = Console.ReadLine();
 
             try
             {
                 var user = this.userService.Authenticate(authenticationData);
 
-                SuccessMessage.Show("Вы успешно вошли в социальную сеть!");
+                SuccessMessage.Show(Environment.NewLine + "Вы успешно вошли в социальную сеть!");
                 SuccessMessage.Show("Добро пожаловать " + user.FirstName);
 
                 Program.userMenuView.Show(user);

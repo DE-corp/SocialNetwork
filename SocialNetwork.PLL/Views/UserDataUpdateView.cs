@@ -15,19 +15,19 @@ namespace SocialNetwork.PLL.Views
 
         public void Show(User user)
         {
-            Console.Write("Меня зовут:");
+            Console.Write("Меня зовут: ");
             user.FirstName = Console.ReadLine();
 
-            Console.Write("Моя фамилия:");
+            Console.Write("Моя фамилия: ");
             user.LastName = Console.ReadLine();
 
-            Console.Write("Ссылка на моё фото:");
+            Console.Write("Ссылка на моё фото: ");
             user.Photo = Console.ReadLine();
 
-            Console.Write("Мой любимый фильм:");
+            Console.Write("Мой любимый фильм: ");
             user.FavoriteMovie = Console.ReadLine();
 
-            Console.Write("Моя любимая книга:");
+            Console.Write("Моя любимая книга: ");
             user.FavoriteBook = Console.ReadLine();
 
             this.userService.Update(user);

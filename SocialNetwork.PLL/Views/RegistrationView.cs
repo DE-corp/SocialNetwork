@@ -17,16 +17,16 @@ namespace SocialNetwork.PLL.Views
         {
             var userRegistrationData = new UserRegistrationData();
 
-            Console.WriteLine("Для создания нового профиля введите ваше имя:");
+            Console.Write("Для создания нового профиля введите ваше имя: ");
             userRegistrationData.FirstName = Console.ReadLine();
 
-            Console.Write("Ваша фамилия:");
+            Console.Write("Ваша фамилия: ");
             userRegistrationData.LastName = Console.ReadLine();
 
-            Console.Write("Пароль:");
+            Console.Write("Пароль: ");
             userRegistrationData.Password = Console.ReadLine();
 
-            Console.Write("Почтовый адрес:");
+            Console.Write("Почтовый адрес: ");
             userRegistrationData.Email = Console.ReadLine();
 
             try
